@@ -4,26 +4,23 @@ namespace app\common\models\domain;
 
 use InvalidArgumentException;
 
-class Professional
+class Customer
 {
     private int $id;
     private string $firstName;
     private string $lastName;
-    /** @var string[] Lista de serviços por profissional  */
-    private array $services = [];
-    /** @var string[] Lista de horários disponíveis por profissional */
-    private array $availability = [];
+    private string $phone;
 
-    public function __construct(int $id, string $firstName, string $lastName, array $services = [], array $availability = [])
+    public function __construct(int $id, string $firstName, string $lastName, string $phone)
     {
         $this->validateFirstName($firstName);
         $this->validateLastName($lastName);
+        $this->validatePhone($phone);
 
         $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->services = $services;
-        $this->availability = $availability;
+        $this->phone = $phone;
     }
 
     public function getId(): int
@@ -31,11 +28,13 @@ class Professional
         return $this->id;
     }
 
-    public function getFirstName(): string{
+    public function getFirstName(): string
+    {
         return $this->firstName;
     }
 
-    public function getLastName(): string{
+    public function getLastName(): string
+    {
         return $this->lastName;
     }
 
@@ -44,14 +43,9 @@ class Professional
         return $this->firstName . ' ' . $this->lastName;
     }
 
-    public function getServices(): array
+    public function getPhone(): string
     {
-        return $this->services;
-    }
-
-    public function getAvailabillity(): array
-    {
-        return $this->availability;
+        return $this->phone;
     }
 
     // Validadores
@@ -65,6 +59,13 @@ class Professional
     private function validateLastName(string $lastName): void {
         if(empty($lastName)){
             throw new InvalidArgumentException("Last name cannot be empty.");
+        }
+    }
+
+    private function validatePhone(string $phone): void
+    {
+        if (!preg_match('/^\+?\d{8,15}$/', $phone)) {
+            throw new InvalidArgumentException("Phone number is invalid.");
         }
     }
 }
