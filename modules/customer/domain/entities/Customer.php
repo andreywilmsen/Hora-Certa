@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\models\domain;
+namespace app\modules\customer\domain\entities;
 
 use InvalidArgumentException;
 
@@ -50,14 +50,16 @@ class Customer
 
     // Validadores
 
-    private function validateFirstName(string $firstName): void {
-        if(empty($firstName)){
+    private function validateFirstName(string $firstName): void
+    {
+        if (empty($firstName)) {
             throw new InvalidArgumentException("First name cannot be empty.");
         }
     }
 
-    private function validateLastName(string $lastName): void {
-        if(empty($lastName)){
+    private function validateLastName(string $lastName): void
+    {
+        if (empty($lastName)) {
             throw new InvalidArgumentException("Last name cannot be empty.");
         }
     }

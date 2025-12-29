@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\models\domain;
+namespace app\modules\scheduling\domain\entities;
 
 use InvalidArgumentException;
 
@@ -49,7 +49,7 @@ class Professional
         return $this->services;
     }
 
-    public function getAvailabillity(): array
+    public function getAvailability(): array
     {
         return $this->availability;
     }

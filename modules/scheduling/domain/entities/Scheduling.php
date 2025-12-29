@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\models\domain;
+namespace app\modules\scheduling\domain\entities;
 
 class Scheduling
 {
@@ -14,21 +14,21 @@ class Scheduling
     /** @var \DateTimeImmutable Dia do agendamento */
     private \DateTimeImmutable $date;
     /** @var int ID do cliente que agendou */
-    private int $clientId;
+    private int $customerId;
     /** @var float Valor total do serviço */
     private float $value;
     /** @var string Status do agendamento (Compareceu, Faltou, Reagendou...) */
     private string $status;
 
 
-    public function __construct(int $id, int $professionalId, array $servicesId = [], int $lengthServices, \DateTimeImmutable $date, int $clientId, float $value, string $status)
+    public function __construct(int $id, int $professionalId, array $servicesId = [], int $lengthServices, \DateTimeImmutable $date, int $customerId, float $value, string $status)
     {
         $this->id = $id;
         $this->professionalId = $professionalId;
         $this->servicesId = $servicesId;
         $this->lengthServices = $lengthServices;
         $this->date = $date;
-        $this->clientId = $clientId;
+        $this->customerId = $customerId;
         $this->value = $value;
         $this->status = $status;
     }
@@ -60,7 +60,7 @@ class Scheduling
 
     public function getClientId(): int
     {
-        return $this->clientId;
+        return $this->customerId;
     }
 
     public function getValue(): float

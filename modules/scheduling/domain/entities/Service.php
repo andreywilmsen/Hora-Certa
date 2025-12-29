@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\models\domain;
+namespace app\modules\scheduling\domain\entities;
 
 use InvalidArgumentException;
 
