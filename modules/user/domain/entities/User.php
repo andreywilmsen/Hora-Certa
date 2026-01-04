@@ -71,6 +71,19 @@ class User
     {
         return $this->email;
     }
+    
+    public function updateUser(string $userName, string $firstName, string $lastName, string $email): void
+    {
+        $this->validateUserName($userName);
+        $this->validateFirstName($firstName);
+        $this->validateLastName($lastName);
+        $this->validateEmail($email);
+
+        $this->userName = $userName;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->email = $email;
+    }
 
     // Validadores
 

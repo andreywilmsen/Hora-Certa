@@ -4,6 +4,7 @@ namespace app\modules\user\controllers;
 
 use app\modules\user\application\usecases\CreateUser;
 use app\modules\user\application\usecases\DeleteUser;
+use app\modules\user\application\usecases\UpdateUser;
 use app\modules\user\contracts\repositories\UserRepository;
 use Yii;
 use yii\rest\Controller;
@@ -40,13 +41,13 @@ class UserController extends Controller
         }
     }
 
-    public function actionDelete()
+    public function actionDelete($id)
     {
         $data =  Yii::$app->request->post();
         $useCase = new DeleteUser($this->userRepository);
 
         try {
-            $useCase->execute($data['id']);
+            $useCase->execute((int)$id);
             return ['status' => 'success', 'message' => 'User deleted successfully.'];
         } catch (\DomainException $e) {
             Yii::$app->response->statusCode = 404;
@@ -54,6 +55,27 @@ class UserController extends Controller
         } catch (\Exception $e) {
             Yii::$app->response->statusCode = 500;
             return ['error' => 'Internal server error.'];
+        }
+    }
+
+    public function actionUpdate($id)
+    {
+        $data = Yii::$app->request->getBodyParams();
+        $useCase = new UpdateUser($this->userRepository);
+
+        try {
+            $useCase->execute(
+                (int) $id,
+                $data['username'],
+                $data['first_name'],
+                $data['last_name'],
+                $data['email']
+            );
+
+            return ['status' => 'success', 'message' => 'User updated successfully.'];
+        } catch (\DomainException $e) {
+            Yii::$app->response->statusCode = 422;
+            return ['error' => $e->getMessage()];
         }
     }
 }

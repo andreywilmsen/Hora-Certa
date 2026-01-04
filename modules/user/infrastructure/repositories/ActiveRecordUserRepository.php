@@ -62,7 +62,7 @@ class ActiveRecordUserRepository implements UserRepository
 
     public function findByEmail(string $email): ?User
     {
-        $ar = UserAR::find()->where(['email'=> $email])->one();
+        $ar = UserAR::find()->where(['email' => $email])->one();
 
         return $ar ? $this->mapToDomain($ar) : null;
     }
