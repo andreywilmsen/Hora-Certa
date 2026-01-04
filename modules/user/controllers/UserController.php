@@ -2,8 +2,11 @@
 
 namespace app\modules\user\controllers;
 
+use app\modules\user\application\dtos\UserResponseDTO;
 use app\modules\user\application\usecases\CreateUser;
 use app\modules\user\application\usecases\DeleteUser;
+use app\modules\user\application\usecases\GetAllUsers;
+use app\modules\user\application\usecases\GetUser;
 use app\modules\user\application\usecases\UpdateUser;
 use app\modules\user\contracts\repositories\UserRepository;
 use Yii;
@@ -75,6 +78,34 @@ class UserController extends Controller
             return ['status' => 'success', 'message' => 'User updated successfully.'];
         } catch (\DomainException $e) {
             Yii::$app->response->statusCode = 422;
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+    public function actionGet($id)
+    {
+        $useCase = new GetUser($this->userRepository);
+
+        try {
+            $user = $useCase->execute((int)$id);
+
+            return ['status' => 'success', 'user' => UserResponseDTO::fromEntity($user)];
+        } catch (\DomainException $e) {
+            Yii::$app->response->statusCode = 404;
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+    public function actionGetAll()
+    {
+        $useCase = new GetAllUsers($this->userRepository);
+
+        try {
+            $users = $useCase->execute();
+
+            return ['status' => 'success', 'users' => UserResponseDTO::fromEntityList($users)];
+        } catch (\DomainException $e) {
+            Yii::$app->response->statusCode = 404;
             return ['error' => $e->getMessage()];
         }
     }
