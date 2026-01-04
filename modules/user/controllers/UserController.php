@@ -3,6 +3,7 @@
 namespace app\modules\user\controllers;
 
 use app\modules\user\application\usecases\CreateUser;
+use app\modules\user\application\usecases\DeleteUser;
 use app\modules\user\contracts\repositories\UserRepository;
 use Yii;
 use yii\rest\Controller;
@@ -36,6 +37,23 @@ class UserController extends Controller
         } catch (\DomainException $e) {
             Yii::$app->response->statusCode = 422;
             return ['error' => $e->getMessage()];
+        }
+    }
+
+    public function actionDelete()
+    {
+        $data =  Yii::$app->request->post();
+        $useCase = new DeleteUser($this->userRepository);
+
+        try {
+            $useCase->execute($data['id']);
+            return ['status' => 'success', 'message' => 'User deleted successfully.'];
+        } catch (\DomainException $e) {
+            Yii::$app->response->statusCode = 404;
+            return ['error' => $e->getMessage()];
+        } catch (\Exception $e) {
+            Yii::$app->response->statusCode = 500;
+            return ['error' => 'Internal server error.'];
         }
     }
 }
