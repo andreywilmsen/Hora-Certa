@@ -1,0 +1,38 @@
+<?php
+
+use yii\db\Migration;
+
+class m260104_000552_create_user_table extends Migration
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function safeUp()
+    {
+        $this->createTable('{{%user}}', [
+            'id' => $this->primaryKey(),
+            'username' => $this->string()->notNull()->unique(),
+            'password_hash' => $this->string()->notNull(),
+            'first_name' => $this->string()->notNull(),
+            'last_name' => $this->string()->notNull(),
+            'email' => $this->string()->unique(),
+            'auth_key' => $this->string(32)->notNull(),
+            'status' => $this->smallInteger()->notNull()->defaultValue(10),
+            'created_at' => $this->integer()->notNull(),
+            'updated_at' => $this->integer()->notNull(),
+        ]);
+
+        $this->createIndex('idx-user-email', '{{%user}}', 'email');
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function safeDown()
+    {
+        $this->dropIndex('idx-user-email', '{{%user}}');
+        $this->dropTable('{{%user}}');
+    }
+}

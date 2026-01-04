@@ -10,4 +10,11 @@ class UserAR extends ActiveRecord
     {
         return 'user';
     }
+
+    public function behaviors()
+    {
+        return [
+            \yii\behaviors\TimestampBehavior::class
+        ];
+    }
 }

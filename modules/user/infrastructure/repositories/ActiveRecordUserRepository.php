@@ -6,6 +6,7 @@ use app\modules\user\contracts\repositories\UserRepository;
 use app\modules\user\domain\entities\User;
 use app\modules\user\infrastructure\ar\UserAR;
 use RuntimeException;
+use Yii;
 
 class ActiveRecordUserRepository implements UserRepository
 {
@@ -18,6 +19,11 @@ class ActiveRecordUserRepository implements UserRepository
         $ar->last_name = $user->getLastName();
         $ar->email = $user->getEmail();
         $ar->password_hash = $user->getPasswordHash();
+
+        if ($ar->isNewRecord) {
+            $ar->auth_key = Yii::$app->security->generateRandomString();
+            $ar->status = 10;
+        }
 
         if (!$ar->save()) {
             throw new RuntimeException("Error saving user.");
@@ -56,7 +62,7 @@ class ActiveRecordUserRepository implements UserRepository
 
     public function findByEmail(string $email): ?User
     {
-        $ar = UserAR::find()->where('email', $email)->one();
+        $ar = UserAR::find()->where(['email'=> $email])->one();
 
         return $ar ? $this->mapToDomain($ar) : null;
     }
