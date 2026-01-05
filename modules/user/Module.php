@@ -9,7 +9,7 @@ class Module extends BaseModule
     /**
      * Define o namespace onde o Yii buscará os controllers deste módulo
      */
-    public $controllerNamespace = 'app\modules\user\controllers';
+    public $controllerNamespace = 'app\modules\user\infrastructure\controllers';
 
     public function init()
     {

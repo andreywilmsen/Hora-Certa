@@ -2,7 +2,7 @@
 
 namespace app\modules\user\infrastructure\repositories;
 
-use app\modules\user\contracts\repositories\UserRepository;
+use app\modules\user\domain\contracts\repositories\UserRepository;
 use app\modules\user\domain\entities\User;
 use app\modules\user\infrastructure\ar\UserAR;
 use RuntimeException;

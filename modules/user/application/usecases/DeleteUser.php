@@ -2,7 +2,7 @@
 
 namespace app\modules\user\application\usecases;
 
-use app\modules\user\contracts\repositories\UserRepository;
+use app\modules\user\domain\contracts\repositories\UserRepository;
 use DomainException;
 
 class DeleteUser

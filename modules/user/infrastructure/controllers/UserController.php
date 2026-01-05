@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\user\controllers;
+namespace app\modules\user\infrastructure\controllers;
 
 use app\modules\user\application\dtos\UserResponseDTO;
 use app\modules\user\application\usecases\CreateUser;
@@ -8,7 +8,7 @@ use app\modules\user\application\usecases\DeleteUser;
 use app\modules\user\application\usecases\GetAllUsers;
 use app\modules\user\application\usecases\GetUser;
 use app\modules\user\application\usecases\UpdateUser;
-use app\modules\user\contracts\repositories\UserRepository;
+use app\modules\user\domain\contracts\repositories\UserRepository;
 use Yii;
 use yii\rest\Controller;
 
