@@ -13,6 +13,8 @@ class m260104_000552_create_user_table extends Migration
             'id' => $this->primaryKey(),
             'username' => $this->string()->notNull()->unique(),
             'password_hash' => $this->string()->notNull(),
+            'password_reset_token' => $this->string()->unique(),
+            'password_reset_expires_at' => $this->integer(),
             'first_name' => $this->string()->notNull(),
             'last_name' => $this->string()->notNull(),
             'email' => $this->string()->unique(),

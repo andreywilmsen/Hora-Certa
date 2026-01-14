@@ -3,6 +3,7 @@
 namespace app\modules\user\infrastructure\controllers;
 
 use app\modules\user\application\usecases\AuthenticateUser;
+use app\modules\user\application\usecases\RecoverPassword;
 use app\modules\user\domain\contracts\repositories\UserRepository;
 use app\modules\user\domain\entities\User;
 use app\modules\user\infrastructure\services\JwtService;
@@ -13,11 +14,13 @@ class AuthController extends Controller
 {
     private UserRepository $userRepository;
     private JwtService $jwtService;
+    private RecoverPassword $recoverPasswordUseCase;
 
-    public function __construct($id, $module, JwtService $jwtService, UserRepository $userRepository, $config = [])
+    public function __construct($id, $module, JwtService $jwtService, UserRepository $userRepository, RecoverPassword $recoverPasswordUseCase, $config = [])
     {
         $this->jwtService = $jwtService;
         $this->userRepository = $userRepository;
+        $this->recoverPasswordUseCase = $recoverPasswordUseCase;
         parent::__construct($id, $module, $config);
     }
 
@@ -85,5 +88,26 @@ class AuthController extends Controller
                 'email' => $user->getEmail(),
             ]
         ];
+    }
+
+    public function actionRequestPasswordReset()
+    {
+        $request =  Yii::$app->request->getBodyParams();
+        $email = $request['email'];
+
+        if (!$email) {
+            Yii::$app->response->statusCode = 400;
+            return ['error' => 'The email field is required.'];
+        }
+
+        try {
+            $this->recoverPasswordUseCase->execute($email);
+            return [
+                'message' => 'If this email address is in our database, you will receive a recovery link shortly.'
+            ];
+        } catch (\Exception $e) {
+            Yii::$app->response->statusCode = 500;
+            return ['error' => $e->getMessage()];
+        }
     }
 }

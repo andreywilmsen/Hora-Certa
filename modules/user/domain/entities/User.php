@@ -12,8 +12,10 @@ class User
     private string $lastName;
     private string $email;
     private string $passwordHash;
+    private ?string $passwordResetToken;
+    private ?int $passwordResetExpiresAt;
 
-    public function __construct(string $userName, string $firstName, string $lastName, string $email, string $passwordHash)
+    public function __construct(string $userName, string $firstName, string $lastName, string $email, string $passwordHash, ?string $passwordResetToken = null, ?int $passwordResetExpiresAt = null)
     {
         $this->validateUserName($userName);
         $this->validatePasswordHash($passwordHash);
@@ -26,6 +28,8 @@ class User
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
+        $this->passwordResetToken = $passwordResetToken;
+        $this->passwordResetExpiresAt = $passwordResetExpiresAt;
     }
 
     public function getId(): ?int
@@ -84,6 +88,33 @@ class User
         $this->lastName = $lastName;
         $this->email = $email;
     }
+
+    // Resetar senha
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function setPasswordResetToken(string $token, int $expiresInSeconds = 3600): void
+    {
+        $this->passwordResetToken = $token;
+        $this->passwordResetExpiresAt = time() + $expiresInSeconds;
+    }
+
+    public function getPasswordExpiresAt(): ?string{
+        return $this->passwordResetExpiresAt;
+    }
+
+    public function isResetTokenValid(string $tokenForValidation): bool
+    {
+        if ($this->passwordResetToken !== $tokenForValidation) {
+            return false;
+        }
+
+        return $this->passwordResetExpiresAt > time();
+    }
+
 
     // Utilitários
 

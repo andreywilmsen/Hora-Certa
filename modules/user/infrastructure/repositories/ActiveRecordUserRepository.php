@@ -19,6 +19,8 @@ class ActiveRecordUserRepository implements UserRepository
         $ar->last_name = $user->getLastName();
         $ar->email = $user->getEmail();
         $ar->password_hash = $user->getPasswordHash();
+        $ar->password_reset_token = $user->getPasswordResetToken();
+        $ar->password_reset_expires_at = $user->getPasswordExpiresAt();
 
         if ($ar->isNewRecord) {
             $ar->auth_key = Yii::$app->security->generateRandomString();
@@ -67,6 +69,12 @@ class ActiveRecordUserRepository implements UserRepository
         return $ar ? $this->mapToDomain($ar) : null;
     }
 
+    public function findByResetToken(string $token): ?string
+    {
+        $ar = UserAR::find()->where(['password_reset_token' => $token])->one();
+        return $ar ? $this->mapToDomain($ar) : null;
+    }
+
     private function mapToDomain(UserAR $ar): User
     {
         $user = new User(
@@ -74,7 +82,9 @@ class ActiveRecordUserRepository implements UserRepository
             $ar->first_name,
             $ar->last_name,
             $ar->email,
-            $ar->password_hash
+            $ar->password_hash,
+            $ar->password_reset_token,
+            $ar->password_reset_expires_at
         );
 
         $user->setId($ar->id);
