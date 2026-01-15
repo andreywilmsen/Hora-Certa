@@ -6,7 +6,7 @@ use app\modules\user\domain\contracts\repositories\UserRepository;
 use app\modules\user\domain\contracts\services\MailService;
 use Yii;
 
-class RecoverPassword
+class RequestTokenRecoveryPassword
 {
     private UserRepository $userRepository;
     private MailService $mailService;
@@ -22,7 +22,7 @@ class RecoverPassword
         $user = $this->userRepository->findByEmail($email);
 
         if ($user) {
-            $token = Yii::$app->security->generateRandomString() . '-' . time();
+            $token = Yii::$app->security->generateRandomString(32) . '-' . time();
             $user->setPasswordResetToken($token);
             $this->userRepository->save($user);
             $this->mailService->sendPasswordResetMail($email, $token);

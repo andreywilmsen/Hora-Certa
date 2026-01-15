@@ -91,6 +91,14 @@ class User
 
     // Resetar senha
 
+
+    public function resetPassword(string $newPasswordHash): void
+    {
+        $this->passwordHash = $newPasswordHash;
+        $this->passwordResetToken = null;
+        $this->passwordResetExpiresAt = null;
+    }
+
     public function getPasswordResetToken(): ?string
     {
         return $this->passwordResetToken;
@@ -102,7 +110,8 @@ class User
         $this->passwordResetExpiresAt = time() + $expiresInSeconds;
     }
 
-    public function getPasswordExpiresAt(): ?string{
+    public function getPasswordExpiresAt(): ?int
+    {
         return $this->passwordResetExpiresAt;
     }
 

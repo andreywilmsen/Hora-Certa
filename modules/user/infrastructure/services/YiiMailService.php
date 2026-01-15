@@ -9,9 +9,8 @@ class YiiMailService implements MailService
 {
     public function sendPasswordResetMail(string $email, string $token): void
     {
-        $baseUrl = "http://localhost:3000/reset-password";
-        $link = $baseUrl . "?token=" . $token;
-
+        $link = "http://localhost:3000/reset-password/" . $token;
+        
         Yii::$app->mailer->compose()
             ->setFrom(['noreply@horacerta.com' => 'Hora Certa - Serviço de Agendamento '])
             ->setTo($email)

@@ -69,9 +69,12 @@ class ActiveRecordUserRepository implements UserRepository
         return $ar ? $this->mapToDomain($ar) : null;
     }
 
-    public function findByResetToken(string $token): ?string
+    public function findByResetToken(string $token): ?User
     {
-        $ar = UserAR::find()->where(['password_reset_token' => $token])->one();
+        $ar = UserAR::find()
+            ->where(['password_reset_token' => trim($token)])
+            ->one();
+
         return $ar ? $this->mapToDomain($ar) : null;
     }
 
@@ -84,7 +87,7 @@ class ActiveRecordUserRepository implements UserRepository
             $ar->email,
             $ar->password_hash,
             $ar->password_reset_token,
-            $ar->password_reset_expires_at
+            $ar->password_reset_expires_at !== null ? (int)$ar->password_reset_expires_at : null
         );
 
         $user->setId($ar->id);
