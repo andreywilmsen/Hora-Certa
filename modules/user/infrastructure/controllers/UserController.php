@@ -7,6 +7,7 @@ use app\modules\user\application\usecases\CreateUser;
 use app\modules\user\application\usecases\DeleteUser;
 use app\modules\user\application\usecases\GetAllUsers;
 use app\modules\user\application\usecases\GetUser;
+use app\modules\user\application\usecases\UpdateProfilePhoto;
 use app\modules\user\application\usecases\UpdateUser;
 use app\modules\user\domain\contracts\repositories\UserRepository;
 use Yii;
@@ -112,5 +113,30 @@ class UserController extends Controller
             Yii::$app->response->statusCode = 404;
             return ['error' => $e->getMessage()];
         }
+    }
+
+    public function actionUploadPhoto($id)
+    {
+        $useCase = new UpdateProfilePhoto($this->userRepository);
+        $file = \yii\web\UploadedFile::getInstanceByName('profile_photo');
+
+        if ($file) {
+            $fileName = 'profile_' . $id . '-' . time() . '.' . $file->extension;
+
+            $uploadDir = \Yii::getAlias('@webroot/uploads/profiles/');
+            $absolutePath = $uploadDir . $fileName;
+
+            $dbPath = '/uploads/profiles/' . $fileName;
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            if ($file->saveAs($absolutePath)) {
+                $user = $useCase->execute((int)$id, $dbPath);
+                return UserResponseDTO::fromEntity($user);
+            }
+        }
+        throw new \yii\web\BadRequestHttpException("Failed to load image.");
     }
 }
