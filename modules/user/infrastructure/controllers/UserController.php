@@ -27,13 +27,16 @@ class UserController extends Controller
     {
         $data = Yii::$app->request->post();
         $useCase = new CreateUser($this->userRepository);
-
+        $tenantId = isset($data['tenant_id']) ? (int)$data['tenant_id'] : 1;
         try {
             $user = $useCase->execute(
+                $tenantId,
                 $data['username'],
                 $data['first_name'],
                 $data['last_name'],
                 $data['email'],
+                $data['phone'] ?? null,
+                $data['profile_photo'] ?? null,
                 $data['plain_password']
             );
 
@@ -72,7 +75,8 @@ class UserController extends Controller
                 $data['username'],
                 $data['first_name'],
                 $data['last_name'],
-                $data['email']
+                $data['email'],
+                $data['phone'] ?? null
             );
 
             return ['status' => 'success', 'message' => 'User updated successfully.'];

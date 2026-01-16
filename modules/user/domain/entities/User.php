@@ -7,15 +7,18 @@ use InvalidArgumentException;
 class User
 {
     private ?int $id = null;
+    private int $tenantId;
     private string $userName;
     private string $firstName;
     private string $lastName;
     private string $email;
+    private ?string $phone;
+    private ?string $profilePhoto;
     private string $passwordHash;
     private ?string $passwordResetToken;
     private ?int $passwordResetExpiresAt;
 
-    public function __construct(string $userName, string $firstName, string $lastName, string $email, string $passwordHash, ?string $passwordResetToken = null, ?int $passwordResetExpiresAt = null)
+    public function __construct(int $tenantId, string $userName, string $firstName, string $lastName, string $email, ?string $phone, ?string $profilePhoto, string $passwordHash, ?string $passwordResetToken = null, ?int $passwordResetExpiresAt = null)
     {
         $this->validateUserName($userName);
         $this->validatePasswordHash($passwordHash);
@@ -23,11 +26,14 @@ class User
         $this->validateLastName($lastName);
         $this->validateEmail($email);
 
+        $this->tenantId = $tenantId;
         $this->userName = $userName;
         $this->passwordHash = $passwordHash;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
+        $this->phone = $phone;
+        $this->profilePhoto = $profilePhoto;
         $this->passwordResetToken = $passwordResetToken;
         $this->passwordResetExpiresAt = $passwordResetExpiresAt;
     }
@@ -46,9 +52,24 @@ class User
         $this->id = $id;
     }
 
+    public function getTenantId(): int
+    {
+        return $this->tenantId;
+    }
+
     public function getUserName(): string
     {
         return $this->userName;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function getProfilePhoto(): ?string
+    {
+        return $this->profilePhoto;
     }
 
     public function getPasswordHash(): string
@@ -76,7 +97,7 @@ class User
         return $this->email;
     }
 
-    public function updateUser(string $userName, string $firstName, string $lastName, string $email): void
+    public function updateUser(string $userName, string $firstName, string $lastName, string $email, ?string $phone = null): void
     {
         $this->validateUserName($userName);
         $this->validateFirstName($firstName);
@@ -87,6 +108,12 @@ class User
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
+        $this->phone = $phone;
+    }
+
+    public function updateProfilePhoto(?string $photoPath): void
+    {
+        $this->profilePhoto = $photoPath;
     }
 
     // Resetar senha
@@ -131,11 +158,14 @@ class User
     {
         return [
             'id' => $this->id,
+            'tenant_id' => $this->tenantId,
             'username' => $this->userName,
             'first_name' => $this->firstName,
             'last_name' => $this->lastName,
             'full_name' => $this->getFullName(),
             'email' => $this->email,
+            'phone' => $this->phone,
+            'profile_photo' => $this->profilePhoto,
         ];
     }
 

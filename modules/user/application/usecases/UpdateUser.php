@@ -13,7 +13,17 @@ class UpdateUser
         $this->repository = $repository;
     }
 
-    public function execute(int $id, string $userName, string $firstName, string $lastName, string $email)
+    /**
+     * @param int $id
+     * @param string $userName
+     * @param string $firstName
+     * @param string $lastName
+     * @param string $email
+     * @param string|null $phone
+     * @return User
+     */
+    
+    public function execute(int $id, string $userName, string $firstName, string $lastName, string $email, ?string $phone)
     {
         $user = $this->repository->findById($id);
 
@@ -21,7 +31,7 @@ class UpdateUser
             throw new \DomainException("User with ID {$id} not found.");
         }
 
-        $user->updateUser($userName, $firstName, $lastName, $email);
+        $user->updateUser($userName, $firstName, $lastName, $email, $phone);
 
         $this->repository->save($user);
 

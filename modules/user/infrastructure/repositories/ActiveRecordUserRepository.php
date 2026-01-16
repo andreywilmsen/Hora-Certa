@@ -13,11 +13,13 @@ class ActiveRecordUserRepository implements UserRepository
     public function save(User $user): void
     {
         $ar = $user->getId() ? UserAR::findOne($user->getId()) : new UserAR();
-
+        $ar->tenant_id = $user->getTenantId();
         $ar->username = $user->getUserName();
         $ar->first_name = $user->getFirstName();
         $ar->last_name = $user->getLastName();
         $ar->email = $user->getEmail();
+        $ar->phone = $user->getPhone();
+        $ar->profile_photo = $user->getProfilePhoto();
         $ar->password_hash = $user->getPasswordHash();
         $ar->password_reset_token = $user->getPasswordResetToken();
         $ar->password_reset_expires_at = $user->getPasswordExpiresAt();
@@ -81,10 +83,13 @@ class ActiveRecordUserRepository implements UserRepository
     private function mapToDomain(UserAR $ar): User
     {
         $user = new User(
+            $ar->tenant_id,
             $ar->username,
             $ar->first_name,
             $ar->last_name,
             $ar->email,
+            $ar->phone,
+            $ar->profile_photo,
             $ar->password_hash,
             $ar->password_reset_token,
             $ar->password_reset_expires_at !== null ? (int)$ar->password_reset_expires_at : null

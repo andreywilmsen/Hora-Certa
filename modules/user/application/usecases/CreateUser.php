@@ -17,16 +17,19 @@ class CreateUser
   }
 
   /** 
+   * @param int $tenantId
    * @param string $username
    * @param string $firstName
    * @param string $lastName
    * @param string $email
+   * @param string $phone
+   * @param string $profilePhoto
    * @param string $plainPassword
    * @return User
    * @throws DomainException se o e-mail já estiver cadastrado 
    */
 
-  public function execute(string $userName, string $firstName, string $lastName, string $email, string $plainPassword): User
+  public function execute(int $tenantId, string $userName, string $firstName, string $lastName, string $email, ?string $phone, ?string $profilePhoto, string $plainPassword): User
   {
 
     if ($this->repository->findByEmail($email)) {
@@ -36,10 +39,13 @@ class CreateUser
     $passwordHash = password_hash($plainPassword, PASSWORD_BCRYPT);
 
     $user = new User(
+      $tenantId,
       $userName,
       $firstName,
       $lastName,
       $email,
+      $phone,
+      $profilePhoto,
       $passwordHash
     );
 
